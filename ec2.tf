@@ -3,7 +3,7 @@ resource "aws_instance" "web_server" {
   instance_type = var.instance_type
 
   tags = {
-    Name        = "web-server-${terraform.workspace}"
+    Name        = "web-server-${terraform.workspace}-new"
     Environment = var.environment
   }
 }
