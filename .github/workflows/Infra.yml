@@ -30,8 +30,12 @@ jobs:
 
       - name: Install terraform-docs
         run: |
-          curl -sLo /usr/local/bin/terraform-docs https://github.com/terraform-docs/terraform-docs/releases/latest/download/terraform-docs-$(uname)-amd64
-          chmod +x /usr/local/bin/terraform-docs    
+         TFDOCS_VERSION=$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -oP '"tag_name": "\K.*?(?=")')
+         curl -sLo terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/${TFDOCS_VERSION}/terraform-docs-$(uname -s | tr '[:upper:]' '[:lower:]')-amd64.tar.gz
+         tar -xzf terraform-docs.tar.gz
+         chmod +x terraform-docs
+         sudo mv terraform-docs /usr/local/bin/
+    
 
       - name: Terraform Init
         run: terraform init
