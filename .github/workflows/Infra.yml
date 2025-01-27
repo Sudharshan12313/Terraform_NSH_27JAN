@@ -56,18 +56,34 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Generate Terraform Docs
-        run: |
-          terraform-docs markdown . > terraform-docs.md
-          echo "Generated Terraform Docs:"
-          cat terraform-docs.md
-
-      - name: Comment Terraform Docs on PR
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v3
         with:
-          path: terraform-docs.md
+          ref: 'main'
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
 
-    #  - name: Terraform Apply
-    #    if: github.event_name == 'push'
-     #   run: terraform apply tfplan
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'   
+
+      - name: Generate Markdown with Terraform Docs
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: .
+          output-file: README.md
+          output-method: inject
+          git-push: true
+          config-file: .terraform-docs.yml
+    
+            
+      - name: Apply Terraform on Merge the PR
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+         terraform init
+         terraform apply -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
