@@ -41,7 +41,7 @@ variable "db_instance_class" {
 }
 
 variable "db_engine" {
-  description = "Database engine"
+  description = "Database engine version"
   default     = "mysql"
 }
 
