@@ -1,4 +1,4 @@
-name: Terraform Workflow
+name: Infra Provisioing through terraform
 
 on:
   workflow_dispatch:
