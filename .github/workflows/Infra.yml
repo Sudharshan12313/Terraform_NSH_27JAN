@@ -59,8 +59,10 @@ jobs:
 
       - name: Clean Git state
         run: |
-          git fetch --prune
-          git reset --hard    
+          git fetch --all
+          git branch -r | grep '8/merge'
+          git tag | grep '8/merge'
+   
 
       - name: Checkout the current branch
         run: |
