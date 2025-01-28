@@ -57,6 +57,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Clean Git state
+        run: |
+          git fetch --prune
+          git reset --hard    
+
       - name: Checkout the current branch
         run: |
           git checkout ${{ github.ref_name }}    
