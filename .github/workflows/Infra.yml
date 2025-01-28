@@ -7,6 +7,11 @@ on:
         description: "Environment to deploy (e.g., dev, staging, prod)"
         required: true
         default: "dev"
+        type: choice
+        options:
+        - dev
+        - staging
+        - prod
 
   push:
     branches:
@@ -49,10 +54,6 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-          ref: 'main'
-          token: ${{ secrets.PAT_TOKEN }}
-          fetch-depth: 0
 
       - name: Configure Git
         run: |
